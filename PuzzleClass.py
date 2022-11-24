@@ -11,8 +11,18 @@ class Puzzle:
                 self.puzzle[i][j] = self.puzzle_input[i][j]
 
     def print_puzzle(self):
-        for i in range(len(self.puzzle_input)):
-            print(self.puzzle[i])
+        for i in range(9):
+            for j in range(9):
+                if j == 3 or j == 6:
+                    print("|", end="")
+                    print(f" {self.puzzle[i][j]} ", end="")
+                else:
+                    print(f" {self.puzzle[i][j]} ", end="")
+            print("")
+            if i == 2 or i == 5:
+                for i in range(29):
+                    print("-", end="")
+                print("")
 
     def three_by_three_starter(self):
         '''Input top left coordinate of 3x3 and it will fill in possible'''
@@ -193,6 +203,7 @@ class Puzzle:
         return True
 
     def solve(self):
+        counter = 0
         while True:
             self.row_solver()
             self.list_to_int()
@@ -212,3 +223,16 @@ class Puzzle:
             if self.solved:
                 print("You win!")
                 break
+            counter += 1
+            if counter % 10 == 0:
+                self.print_puzzle()
+                self.stuck()
+
+    def stuck(self):
+        '''Run this method if you get stuck in a loop where multiple end options work to win, just have to choose one'''
+        #randomly pick one option from list
+        for i in range(9):
+            for j in range(9):
+                if isinstance(self.puzzle[i][j], list):
+                    self.puzzle[i][j] = self.puzzle[i][j][0]
+                    return

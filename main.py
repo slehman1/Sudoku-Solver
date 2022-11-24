@@ -1,7 +1,7 @@
 from PuzzleClass import Puzzle
 from sudoku import Sudoku
 
-new_puzzle = Sudoku(3).difficulty(0.3)
+new_puzzle = Sudoku(3).difficulty(0.4)
 
 myPuzzle = Puzzle(new_puzzle.board)
 myPuzzle.initialize_puzzle()
