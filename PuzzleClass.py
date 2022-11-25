@@ -1,3 +1,4 @@
+import random
 
 class Puzzle:
     def __init__(self, puzzle_input):
@@ -76,6 +77,7 @@ class Puzzle:
                     new_list = [num for num in self.puzzle[i][k] if num not in used_nums]
                     new_row.append(new_list)
             self.puzzle[i] = new_row
+        self.list_to_int()
 
     def col_solver(self):
         #for each col in the puzzle
@@ -96,6 +98,7 @@ class Puzzle:
                     new_col.append(new_list)
             for z in range(9):
                 self.puzzle[z][i] = new_col[z]
+        self.list_to_int()
 
     def three_by_three_solver(self):
         '''Input top left coordinate of 3x3 and it will fill in possible'''
@@ -128,8 +131,12 @@ class Puzzle:
                     row_index = top_left_tup[0] + rowz
                     col_index = top_left_tup[1] + colz
                     self.puzzle[row_index][col_index] = new_3x3[rowz][colz]
+        self.list_to_int()
 
     def row_list_one_instance(self):
+        '''The goal of this function is to go through the puzzle by row,
+        checking the lists and counting the values in the lists, if any value has a single count then it must be
+        placed in the spot where the list is. V1 flaw was that '''
         #for each row
         for i in range(9):
             #initialize a map
@@ -200,33 +207,47 @@ class Puzzle:
             row_sum = sum(self.puzzle[i])
             if row_sum != 45:
                 return False
+
+        for i in range(9):
+            col_sum = 0
+            for j in range(9):
+                col_sum += self.puzzle[j][i]
+            if col_sum != 45:
+                return False
         return True
 
     def solve(self):
         counter = 0
-        while True:
+        while counter < 40:
             self.row_solver()
-            self.list_to_int()
             self.col_solver()
-            self.list_to_int()
             self.three_by_three_solver()
-            self.list_to_int()
+            self.row_solver()
+            self.col_solver()
+            self.three_by_three_solver()
+            self.row_solver()
+            self.col_solver()
+            self.three_by_three_solver()
+            self.print_puzzle()
             self.row_list_one_instance()
+            self.print_puzzle()
             self.row_solver()
-            self.list_to_int()
             self.col_solver()
-            self.list_to_int()
             self.three_by_three_solver()
-            self.list_to_int()
             self.col_list_one_instance()
+            self.print_puzzle()
             self.solved = self.check_done()
             if self.solved:
-                print("You win!")
+                print(f"You win! It took {counter} iterations!")
                 break
             counter += 1
-            if counter % 10 == 0:
+            print(counter)
+            self.print_puzzle()
+            if counter % 50 == 0:
                 self.print_puzzle()
                 self.stuck()
+            if counter > 100:
+                break
 
     def stuck(self):
         '''Run this method if you get stuck in a loop where multiple end options work to win, just have to choose one'''
@@ -236,3 +257,12 @@ class Puzzle:
                 if isinstance(self.puzzle[i][j], list):
                     self.puzzle[i][j] = self.puzzle[i][j][0]
                     return
+
+    def random_solution(self):
+        for i in range(9):
+            for j in range(9):
+                if isinstance(self.puzzle[i][j], list):
+                    self.puzzle[i][j] = random.choice(self.puzzle[i][j])
+
+
+
