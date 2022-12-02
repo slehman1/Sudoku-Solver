@@ -25,6 +25,26 @@ class Puzzle:
                     print("-", end="")
                 print("")
 
+    def print_initial_puzzle(self):
+        for i in range(9):
+            for j in range(9):
+                if j == 3 or j == 6:
+                    print("|", end="")
+                    if self.puzzle[i][j] == None:
+                        print(f"  ", end="")
+                    else:
+                        print(f" {self.puzzle[i][j]} ", end="")
+                else:
+                    if self.puzzle[i][j] == None:
+                        print(f"   ", end="")
+                    else:
+                        print(f" {self.puzzle[i][j]} ", end="")
+            print("")
+            if i == 2 or i == 5:
+                for i in range(29):
+                    print("-", end="")
+                print("")
+
     def three_by_three_starter(self):
         '''Input top left coordinate of 3x3 and it will fill in possible'''
         possible = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -263,6 +283,16 @@ class Puzzle:
             for j in range(9):
                 if isinstance(self.puzzle[i][j], list):
                     self.puzzle[i][j] = random.choice(self.puzzle[i][j])
+
+    def random_possibilities_solution(self):
+        '''For each row randomly put a number 1-9, but remove that from the list as you go thru'''
+        for i in range(9):
+            possibilites = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            for j in range(9):
+                if self.puzzle[i][j] == None:
+                    random_num = random.choice(possibilites)
+                    self.puzzle[i][j] = random_num
+                    possibilites.remove(random_num)
 
 
 
